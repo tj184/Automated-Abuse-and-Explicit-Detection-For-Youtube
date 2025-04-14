@@ -39,4 +39,8 @@ Designed for moderation of unsafe or NSFW content in visual media.
 
 Adult content image dataset for model training and evaluation: http://figshare.com/articles/dataset/Adult_content_dataset/13456484?file=25843427
 
+############ Running the project ##########
+
+Provide link of video in main.py and run the code. 
+
 
