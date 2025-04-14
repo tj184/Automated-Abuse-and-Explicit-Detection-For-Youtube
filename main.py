@@ -1,7 +1,7 @@
 
 from video_downloader import download_video
-from transcript_generator import generate_transcript
-from adult_content_detection import analyze_video
+from transcript_generator_with_whisper import generate_transcript
+from explicit_content_detection import analyze_video
 
 url = "Paste the yt link"
 video_file_path = download_video(url)
