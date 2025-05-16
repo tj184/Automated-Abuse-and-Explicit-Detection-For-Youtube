@@ -6,6 +6,7 @@ from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen import canvas
 from datetime import datetime
 import os
+from Hindi_abusive import predict_from_file
 
 def create_pdf_report(file_path, transcript_path, text_analysis, video_analysis, output_pdf="video_analysis_report.pdf"):
     c = canvas.Canvas(output_pdf, pagesize=A4)
@@ -43,6 +44,21 @@ def create_pdf_report(file_path, transcript_path, text_analysis, video_analysis,
     write_line(f"  {text_analysis['final_verdict']}")
     write_line("-" * 90)
 
+    # Section 2.5: Hindi Text Analysis (only if present)
+    if os.path.exists(transcript_path):
+        with open(transcript_path, "r", encoding="utf-8") as f:
+            content = f.read()
+        hindi_chars = [c for c in content if '\u0900' <= c <= '\u097F']
+        if len(hindi_chars) > 10:  # Arbitrary threshold to check for presence of Hindi
+            write_line("HINDI TEXT ABUSIVE CONTENT ANALYSIS")
+            hindi_analysis = predict_from_file(transcript_path)
+            for sentence, labels in hindi_analysis:
+                label_str = ", ".join(labels)
+                short_sentence = (sentence[:80] + '...') if len(sentence) > 80 else sentence
+                write_line(f"- {short_sentence}")
+                write_line(f"  → Labels: {label_str}")
+            write_line("-" * 90)
+
     # Section 3: Adult Content Analysis
     write_line("ADULT CONTENT DETECTION")
     for key, value in video_analysis.items():
@@ -52,9 +68,10 @@ def create_pdf_report(file_path, transcript_path, text_analysis, video_analysis,
     c.save()
     print(f"[INFO] PDF report generated at: {output_pdf}")
 
+
 # --- Main Logic ---
 
-url = "https://youtu.be/TFnJFaWwlbs?si=D6ojkAcTSmR4h2Q7"
+url = "https://youtu.be/OPfmNBfYSYs?si=MnCMTfkFA2FAYksx"
 video_file_path = download_video(url)
 
 if video_file_path:
@@ -68,5 +85,5 @@ transcript_path = generate_transcript(video_file_path)
 text_analysis_english = analyze_text_file("vid_down_transcript.txt")
 video_analysis_result = analyze_video(video_file_path)
 
-# Create PDF report
+# Only include Hindi analysis in PDF if Hindi is found in the transcript
 create_pdf_report(video_file_path, transcript_path, text_analysis_english, video_analysis_result)
