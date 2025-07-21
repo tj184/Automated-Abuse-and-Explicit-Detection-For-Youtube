@@ -40,7 +40,7 @@ Designed for moderation of unsafe or NSFW content in visual media.
 
 *** Note-I have trained the model with  a small data size due to hardware limitation , perforamce can be improved with large dataset.***
 
-Adult content image dataset for model training and evaluation: http://figshare.com/articles/dataset/Adult_content_dataset/13456484?file=25843427
+
 
 ############ Running the project ##########
 
